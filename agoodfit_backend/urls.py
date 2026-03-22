@@ -17,6 +17,7 @@ urlpatterns = [
     path('api/messaging/', include('messaging.urls')),
     path('api/dashboard/', include('dashboard.urls')),
     path('api/notifications/', include('notifications.urls')),
+    path('api/feed/', include('feed.urls')),
 ]
 
 # Media files — served by Django in both dev and production
