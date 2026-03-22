@@ -1,0 +1,29 @@
+# Django
+Django>=6.0.0,<7.0.0
+djangorestframework>=3.15.0
+django-cors-headers>=4.4.0
+djangorestframework-simplejwt>=5.3.0
+
+# Database
+psycopg2-binary>=2.9.9
+mysqlclient>=2.2.0
+
+# Real-time
+channels>=4.1.0
+channels-redis>=4.2.0
+
+# Task Queue
+Celery>=5.4.0
+redis>=5.0.0
+
+# Utilities
+Pillow>=10.4.0
+python-dotenv>=1.0.0
+requests>=2.32.0
+
+# Production
+gunicorn>=23.0.0
+whitenoise>=6.7.0
+
+# Push Notifications (FCM)
+# No additional packages needed - using REST API
