@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Good Fit – Wellness. Connection. Community.</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #4A7DFF;
+      --primary-dark: #3A6AE8;
+      --secondary: #00C2A8;
+      --accent: #FF6B6B;
+      --bg: #F8FAFF;
+      --surface: #FFFFFF;
+      --text: #1A1D2E;
+      --text-secondary: #6B7280;
+      --border: #E5E7EB;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 40px;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .nav-logo-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    .nav-badge {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--primary);
+      background: rgba(74,125,255,0.1);
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      background: linear-gradient(160deg, #EEF4FF 0%, #F0FDF9 50%, #FFF8F0 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(74,125,255,0.08) 0%, transparent 70%);
+      top: -100px; left: -100px;
+      border-radius: 50%;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(0,194,168,0.08) 0%, transparent 70%);
+      bottom: -50px; right: -50px;
+      border-radius: 50%;
+    }
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(74,125,255,0.1);
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 16px;
+      border-radius: 20px;
+      margin-bottom: 28px;
+      border: 1px solid rgba(74,125,255,0.2);
+    }
+    .hero h1 {
+      font-size: clamp(40px, 6vw, 72px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -1.5px;
+      max-width: 800px;
+      margin-bottom: 24px;
+    }
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      font-size: 18px;
+      color: var(--text-secondary);
+      max-width: 520px;
+      margin-bottom: 40px;
+    }
+    .hero-cta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 14px 28px;
+      border-radius: 14px;
+      text-decoration: none;
+      box-shadow: 0 8px 24px rgba(74,125,255,0.35);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(74,125,255,0.45);
+    }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      color: var(--text);
+      font-size: 16px;
+      font-weight: 600;
+      padding: 14px 28px;
+      border-radius: 14px;
+      text-decoration: none;
+      border: 2px solid var(--border);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .btn-secondary:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    /* ── Stats ── */
+    .stats-bar {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      flex-wrap: wrap;
+      padding: 40px 24px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .stat {
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    /* ── Features ── */
+    .section {
+      padding: 80px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .section-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 16px;
+    }
+    .section-subtitle {
+      font-size: 17px;
+      color: var(--text-secondary);
+      max-width: 540px;
+      margin-bottom: 56px;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.08);
+    }
+    .feature-icon {
+      width: 52px; height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+    .feature-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .feature-card p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ── How It Works ── */
+    .how-section {
+      background: linear-gradient(135deg, #EEF4FF, #F0FDF9);
+      padding: 80px 24px;
+    }
+    .how-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 32px;
+      counter-reset: steps;
+    }
+    .step {
+      text-align: center;
+      padding: 24px;
+    }
+    .step-number {
+      width: 48px; height: 48px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 800;
+      color: white;
+      margin: 0 auto 16px;
+    }
+    .step h3 {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .step p {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    /* ── API Section ── */
+    .api-section {
+      background: #0F1117;
+      color: #fff;
+      padding: 80px 24px;
+    }
+    .api-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .api-inner .section-label { color: var(--secondary); }
+    .api-inner .section-title { color: #fff; }
+    .api-inner .section-subtitle { color: rgba(255,255,255,0.55); margin-left: auto; margin-right: auto; }
+    .endpoints {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 40px;
+      text-align: left;
+    }
+    .endpoint {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 13px;
+    }
+    .endpoint-method {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+      display: inline-block;
+    }
+    .get { background: rgba(0,194,168,0.2); color: var(--secondary); }
+    .post { background: rgba(74,125,255,0.2); color: #7BA8FF; }
+    .endpoint-path { color: rgba(255,255,255,0.7); }
+
+    /* ── CTA Banner ── */
+    .cta-banner {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      padding: 80px 24px;
+      text-align: center;
+      color: white;
+    }
+    .cta-banner h2 {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 800;
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+    .cta-banner p {
+      font-size: 17px;
+      opacity: 0.85;
+      margin-bottom: 36px;
+    }
+    .btn-white {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: white;
+      color: var(--primary);
+      font-size: 16px;
+      font-weight: 700;
+      padding: 14px 32px;
+      border-radius: 14px;
+      text-decoration: none;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      transition: transform 0.2s;
+    }
+    .btn-white:hover { transform: translateY(-2px); }
+
+    /* ── Footer ── */
+    footer {
+      background: #0F1117;
+      color: rgba(255,255,255,0.4);
+      text-align: center;
+      padding: 32px 24px;
+      font-size: 13px;
+    }
+    footer a { color: rgba(255,255,255,0.6); text-decoration: none; }
+    footer a:hover { color: white; }
+
+    @media (max-width: 600px) {
+      nav { padding: 14px 20px; }
+      .stats-bar { gap: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <a href="/" class="nav-logo">
+      <div class="nav-logo-icon">❤️</div>
+      A Good Fit
+    </a>
+    <span class="nav-badge">Now Live</span>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-pill">✨ Wellness · Connection · Community</div>
+    <h1>Find Your <span>Perfect Fit</span><br>in Health &amp; Life</h1>
+    <p>A Good Fit connects you with workout partners, wellness communities, and meaningful relationships — all in one place.</p>
+    <div class="hero-cta">
+      <a href="#features" class="btn-primary">🚀 Explore Features</a>
+      <a href="#api" class="btn-secondary">📡 API Docs</a>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-value">7</div>
+      <div class="stat-label">API Modules</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">40+</div>
+      <div class="stat-label">Endpoints</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">JWT</div>
+      <div class="stat-label">Auth</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">REST</div>
+      <div class="stat-label">Architecture</div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <section class="section" id="features">
+    <div class="section-label">Features</div>
+    <h2 class="section-title">Everything you need<br>to live well, together</h2>
+    <p class="section-subtitle">From live workout tracking to local events and meaningful connections — it's all here.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(74,125,255,0.1);">🏃</div>
+        <h3>Live Workout Tracking</h3>
+        <p>Track runs, rides, and sessions in real time with GPS route mapping, distance, speed, and calorie estimation.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(0,194,168,0.1);">🤝</div>
+        <h3>Smart Matching</h3>
+        <p>Find workout partners, accountability buddies, or new friends based on goals, interests, and location.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(255,107,107,0.1);">📅</div>
+        <h3>Local Events</h3>
+        <p>Discover and RSVP to yoga classes, group runs, fitness challenges, and wellness events near you.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(168,85,247,0.1);">💬</div>
+        <h3>Messaging</h3>
+        <p>Direct and group conversations with your connections. Stay motivated together.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(251,146,60,0.1);">📊</div>
+        <h3>Dashboard &amp; Goals</h3>
+        <p>Personal stats, workout streaks, weekly goals, and progress milestones — all in one dashboard.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(16,185,129,0.1);">🔔</div>
+        <h3>Push Notifications</h3>
+        <p>Stay on top of event reminders, new matches, messages, and workout nudges via Firebase.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <div class="how-section">
+    <div class="how-inner">
+      <div style="text-align:center; margin-bottom: 56px;">
+        <div class="section-label" style="justify-content:center; display:flex;">How It Works</div>
+        <h2 class="section-title">Up and running in minutes</h2>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Create Account</h3>
+          <p>Sign up and set your primary wellness goal — community, fitness buddy, events, or connection.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Build Your Profile</h3>
+          <p>Add your interests, availability, location, and what wellness looks like to you.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Get Matched</h3>
+          <p>Discover people and events aligned with your goals. Connect, message, and meet up.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">4</div>
+          <h3>Track &amp; Grow</h3>
+          <p>Log workouts, attend events, hit milestones, and build streaks with your community.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- API -->
+  <div class="api-section" id="api">
+    <div class="api-inner">
+      <div class="section-label">REST API</div>
+      <h2 class="section-title">Powered by a robust backend</h2>
+      <p class="section-subtitle">JWT-authenticated REST API built with Django REST Framework. All endpoints return JSON.</p>
+      <div class="endpoints">
+        <div class="endpoint">
+          <span class="endpoint-method post">POST</span>
+          <div class="endpoint-path">/api/users/login/</div>
+        </div>
+        <div class="endpoint">
+          <span class="endpoint-method get">GET</span>
+          <div class="endpoint-path">/api/users/me/</div>
+        </div>
+        <div class="endpoint">
+          <span class="endpoint-method get">GET</span>
+          <div class="endpoint-path">/api/events/</div>
+        </div>
+        <div class="endpoint">
+          <span class="endpoint-method post">POST</span>
+          <div class="endpoint-path">/api/workouts/</div>
+        </div>
+        <div class="endpoint">
+          <span class="endpoint-method get">GET</span>
+          <div class="endpoint-path">/api/workouts/stats/</div>
+        </div>
+        <div class="endpoint">
+          <span class="endpoint-method post">POST</span>
+          <div class="endpoint-path">/api/workouts/live/start/</div>
+        </div>
+        <div class="endpoint">
+          <span class="endpoint-method get">GET</span>
+          <div class="endpoint-path">/api/matching/</div>
+        </div>
+        <div class="endpoint">
+          <span class="endpoint-method get">GET</span>
+          <div class="endpoint-path">/api/messaging/conversations/</div>
+        </div>
+        <div class="endpoint">
+          <span class="endpoint-method get">GET</span>
+          <div class="endpoint-path">/api/dashboard/</div>
+        </div>
+        <div class="endpoint">
+          <span class="endpoint-method post">POST</span>
+          <div class="endpoint-path">/api/notifications/register/</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-banner">
+    <h2>Ready to find your good fit?</h2>
+    <p>Download the app and start your wellness journey today.</p>
+    <a href="#" class="btn-white">📱 Coming Soon on iOS &amp; Android</a>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2026 A Good Fit. All rights reserved. &nbsp;·&nbsp; <a href="/admin/">Admin</a> &nbsp;·&nbsp; <a href="/api/users/">API</a></p>
+  </footer>
+
+</body>
+</html>
