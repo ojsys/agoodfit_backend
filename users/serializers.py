@@ -35,11 +35,13 @@ class UserSerializer(serializers.ModelSerializer):
     intentions = UserIntentionSerializer(many=True, read_only=True)
     photos = UserPhotoSerializer(many=True, read_only=True)
     prompts = UserPromptSerializer(many=True, read_only=True)
-    
+
     class Meta:
         model = User
         fields = [
-            'id', 'email', 'username', 'user_type', 'bio', 'profile_photo',
+            'id', 'email', 'username', 'first_name', 'last_name', 'middle_name',
+            'date_of_birth', 'gender', 'pronouns', 'fitness_level', 'occupation',
+            'website', 'user_type', 'bio', 'profile_photo',
             'hometown', 'latitude', 'longitude', 'primary_goal', 'privacy_setting',
             'availability', 'motivation', 'wellness_looks_like', 'login_streak',
             'workout_streak', 'interests', 'intentions', 'photos', 'prompts',
@@ -53,12 +55,14 @@ class UserProfileSerializer(serializers.ModelSerializer):
     intentions = UserIntentionSerializer(many=True, read_only=True)
     photos = UserPhotoSerializer(many=True, read_only=True)
     prompts = UserPromptSerializer(many=True, read_only=True)
-    
+
     class Meta:
         model = User
         fields = [
-            'id', 'email', 'username', 'bio', 'profile_photo',
-            'hometown', 'latitude', 'longitude', 'primary_goal',
+            'id', 'email', 'username', 'first_name', 'last_name', 'middle_name',
+            'date_of_birth', 'gender', 'pronouns', 'fitness_level', 'occupation',
+            'website', 'bio', 'profile_photo',
+            'hometown', 'latitude', 'longitude', 'primary_goal', 'privacy_setting',
             'availability', 'motivation', 'wellness_looks_like',
             'login_streak', 'workout_streak',
             'interests', 'intentions', 'photos', 'prompts',
@@ -90,6 +94,8 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
+            'first_name', 'last_name', 'middle_name', 'date_of_birth',
+            'gender', 'pronouns', 'fitness_level', 'occupation', 'website',
             'username', 'bio', 'hometown', 'latitude', 'longitude',
             'primary_goal', 'privacy_setting', 'availability',
             'motivation', 'wellness_looks_like'
@@ -101,12 +107,14 @@ class PublicUserSerializer(serializers.ModelSerializer):
     interests = UserInterestSerializer(many=True, read_only=True)
     photos = UserPhotoSerializer(many=True, read_only=True)
     prompts = UserPromptSerializer(many=True, read_only=True)
-    
+
     class Meta:
         model = User
         fields = [
-            'id', 'username', 'bio', 'profile_photo',
-            'hometown', 'interests', 'photos', 'prompts'
+            'id', 'username', 'first_name', 'last_name',
+            'fitness_level', 'occupation', 'website',
+            'bio', 'profile_photo', 'hometown',
+            'interests', 'photos', 'prompts'
         ]
 
 

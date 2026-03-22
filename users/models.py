@@ -29,12 +29,34 @@ class User(AbstractUser):
         ('friends', 'Friends Only'),
         ('anonymous', 'Anonymous'),
     ]
-    
+
+    GENDER_CHOICES = [
+        ('male', 'Male'),
+        ('female', 'Female'),
+        ('non_binary', 'Non-Binary'),
+        ('other', 'Other'),
+        ('prefer_not_to_say', 'Prefer Not to Say'),
+    ]
+
+    FITNESS_LEVEL_CHOICES = [
+        ('beginner', 'Beginner'),
+        ('intermediate', 'Intermediate'),
+        ('advanced', 'Advanced'),
+        ('athlete', 'Athlete'),
+    ]
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
     user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES, default='standard')
     
     # Profile Information
+    middle_name = models.CharField(max_length=50, blank=True)
+    date_of_birth = models.DateField(null=True, blank=True)
+    gender = models.CharField(max_length=20, choices=GENDER_CHOICES, blank=True)
+    pronouns = models.CharField(max_length=50, blank=True)
+    fitness_level = models.CharField(max_length=20, choices=FITNESS_LEVEL_CHOICES, blank=True)
+    occupation = models.CharField(max_length=100, blank=True)
+    website = models.URLField(max_length=200, blank=True)
     bio = models.TextField(max_length=500, blank=True)
     profile_photo = models.ImageField(upload_to='profile_photos/', blank=True, null=True)
     hometown = models.CharField(max_length=100, blank=True)
