@@ -41,7 +41,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'email', 'username', 'first_name', 'last_name', 'middle_name',
             'date_of_birth', 'gender', 'pronouns', 'fitness_level', 'occupation',
-            'website', 'user_type', 'bio', 'profile_photo',
+            'website', 'user_type', 'bio', 'profile_photo', 'cover_photo',
             'hometown', 'latitude', 'longitude', 'primary_goal', 'privacy_setting',
             'availability', 'motivation', 'wellness_looks_like', 'login_streak',
             'workout_streak', 'interests', 'intentions', 'photos', 'prompts',
@@ -61,7 +61,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'email', 'username', 'first_name', 'last_name', 'middle_name',
             'date_of_birth', 'gender', 'pronouns', 'fitness_level', 'occupation',
-            'website', 'bio', 'profile_photo',
+            'website', 'bio', 'profile_photo', 'cover_photo',
             'hometown', 'latitude', 'longitude', 'primary_goal', 'privacy_setting',
             'availability', 'motivation', 'wellness_looks_like',
             'login_streak', 'workout_streak',
@@ -96,7 +96,8 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         fields = [
             'first_name', 'last_name', 'middle_name', 'date_of_birth',
             'gender', 'pronouns', 'fitness_level', 'occupation', 'website',
-            'username', 'bio', 'hometown', 'latitude', 'longitude',
+            'username', 'bio', 'profile_photo', 'cover_photo',
+            'hometown', 'latitude', 'longitude',
             'primary_goal', 'privacy_setting', 'availability',
             'motivation', 'wellness_looks_like'
         ]
@@ -113,7 +114,7 @@ class PublicUserSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'username', 'first_name', 'last_name',
             'fitness_level', 'occupation', 'website',
-            'bio', 'profile_photo', 'hometown',
+            'bio', 'profile_photo', 'cover_photo', 'hometown',
             'interests', 'photos', 'prompts'
         ]
 

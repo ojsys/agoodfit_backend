@@ -162,6 +162,32 @@ class UserViewSet(viewsets.ModelViewSet):
             'user': UserSerializer(user).data
         })
     
+    @action(detail=False, methods=['post'], url_path='upload_avatar')
+    def upload_avatar(self, request):
+        """Upload or replace the authenticated user's profile photo."""
+        photo = request.FILES.get('profile_photo')
+        if not photo:
+            return Response({'error': 'No file provided.'},
+                            status=status.HTTP_400_BAD_REQUEST)
+        request.user.profile_photo = photo
+        request.user.save(update_fields=['profile_photo'])
+        serializer = UserProfileSerializer(request.user,
+                                           context={'request': request})
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['post'], url_path='upload_cover')
+    def upload_cover(self, request):
+        """Upload or replace the authenticated user's cover photo."""
+        photo = request.FILES.get('cover_photo')
+        if not photo:
+            return Response({'error': 'No file provided.'},
+                            status=status.HTTP_400_BAD_REQUEST)
+        request.user.cover_photo = photo
+        request.user.save(update_fields=['cover_photo'])
+        serializer = UserProfileSerializer(request.user,
+                                           context={'request': request})
+        return Response(serializer.data)
+
     @action(detail=False, methods=['post'], url_path='change_password')
     def change_password(self, request):
         """Change the authenticated user's password."""

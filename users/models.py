@@ -59,6 +59,7 @@ class User(AbstractUser):
     website = models.URLField(max_length=200, blank=True)
     bio = models.TextField(max_length=500, blank=True)
     profile_photo = models.ImageField(upload_to='profile_photos/', blank=True, null=True)
+    cover_photo = models.ImageField(upload_to='cover_photos/', blank=True, null=True)
     hometown = models.CharField(max_length=100, blank=True)
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
