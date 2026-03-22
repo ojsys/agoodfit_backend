@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to A Good Fit</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f4f6f9;
+      color: #1a1a2e;
+    }
+    .wrapper {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #ffffff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #6c63ff 0%, #48cfad 100%);
+      padding: 48px 40px 40px;
+      text-align: center;
+    }
+    .header .logo {
+      width: 72px;
+      height: 72px;
+      background: rgba(255,255,255,0.25);
+      border-radius: 20px;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      line-height: 72px;
+    }
+    .header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+    }
+    .header p {
+      margin-top: 8px;
+      font-size: 15px;
+      color: rgba(255,255,255,0.85);
+    }
+    /* Body */
+    .body {
+      padding: 40px;
+    }
+    .greeting {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 12px;
+    }
+    .intro {
+      font-size: 15px;
+      line-height: 1.7;
+      color: #555577;
+      margin-bottom: 32px;
+    }
+    /* Feature cards */
+    .features {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 36px;
+    }
+    .feature {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      background: #f8f9ff;
+      border-radius: 14px;
+      padding: 16px 20px;
+    }
+    .feature-icon {
+      font-size: 26px;
+      min-width: 36px;
+      text-align: center;
+      margin-top: 2px;
+    }
+    .feature-text h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a1a2e;
+      margin-bottom: 3px;
+    }
+    .feature-text p {
+      font-size: 13px;
+      color: #777799;
+      line-height: 1.5;
+    }
+    /* CTA */
+    .cta-wrapper {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .cta-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #6c63ff, #48cfad);
+      color: #ffffff !important;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 16px 40px;
+      border-radius: 50px;
+      letter-spacing: 0.2px;
+    }
+    /* Divider */
+    .divider {
+      height: 1px;
+      background: #eeeef5;
+      margin: 8px 0 28px;
+    }
+    .tip {
+      font-size: 14px;
+      color: #777799;
+      line-height: 1.6;
+      background: #fffbf0;
+      border-left: 3px solid #ffd166;
+      padding: 14px 18px;
+      border-radius: 0 10px 10px 0;
+      margin-bottom: 0;
+    }
+    /* Footer */
+    .footer {
+      background: #f4f6f9;
+      padding: 28px 40px;
+      text-align: center;
+    }
+    .footer p {
+      font-size: 12px;
+      color: #aaaacc;
+      line-height: 1.8;
+    }
+    .footer a {
+      color: #6c63ff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <!-- Header -->
+    <div class="header">
+      <div class="logo">&#127939;</div>
+      <h1>Welcome to A Good Fit!</h1>
+      <p>Your wellness community is waiting</p>
+    </div>
+
+    <!-- Body -->
+    <div class="body">
+      <p class="greeting">Hey {{ username }}, you're in! &#127881;</p>
+      <p class="intro">
+        We're thrilled to have you join A Good Fit — the app where fitness meets community.
+        Whether you're looking for a workout buddy, exploring local events, or building
+        meaningful connections, you've found the right place.
+      </p>
+
+      <!-- Features -->
+      <div class="features">
+        <div class="feature">
+          <div class="feature-icon">&#127939;</div>
+          <div class="feature-text">
+            <h3>Track Your Workouts</h3>
+            <p>Log runs, rides, swims and more with live GPS tracking and calorie estimates.</p>
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">&#128101;</div>
+          <div class="feature-text">
+            <h3>Find Your Fit Squad</h3>
+            <p>Discover people who share your interests and fitness goals nearby.</p>
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">&#128197;</div>
+          <div class="feature-text">
+            <h3>Join Local Events</h3>
+            <p>RSVP to group workouts, wellness events, and community meetups in your area.</p>
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">&#128172;</div>
+          <div class="feature-text">
+            <h3>Connect &amp; Motivate</h3>
+            <p>Message your matches, cheer each other on, and grow together.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-wrapper">
+        <a href="https://www.lendmonade.com" class="cta-btn">Open A Good Fit</a>
+      </div>
+
+      <div class="divider"></div>
+
+      <p class="tip">
+        <strong>Quick tip:</strong> Complete your profile and pick your interests to get
+        the best matches and event recommendations right away!
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>
+        You're receiving this because you signed up at
+        <a href="https://www.lendmonade.com">A Good Fit</a>.<br />
+        &copy; {{ year }} A Good Fit. All rights reserved.<br />
+        <a href="https://www.lendmonade.com">lendmonade.com</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
 from .models import UserInterest, UserIntention, UserPhoto, UserPrompt, Follow
 
 User = get_user_model()
@@ -74,12 +75,14 @@ class UserCreateSerializer(serializers.ModelSerializer):
         fields = ['email', 'username', 'password', 'primary_goal']
     
     def create(self, validated_data):
+        from .emails import send_welcome_email
         user = User.objects.create_user(
             email=validated_data['email'],
             username=validated_data['username'],
             password=validated_data['password'],
             primary_goal=validated_data.get('primary_goal', 'all')
         )
+        send_welcome_email(user)
         return user
 
 
@@ -134,3 +137,13 @@ class OnboardingSerializer(serializers.Serializer):
     privacy_setting = serializers.ChoiceField(choices=User.PRIVACY_CHOICES, required=False)
     latitude = serializers.FloatField(required=False, allow_null=True)
     longitude = serializers.FloatField(required=False, allow_null=True)
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    """Validate and apply a password change request."""
+    current_password = serializers.CharField(write_only=True)
+    new_password = serializers.CharField(write_only=True, min_length=8)
+
+    def validate_new_password(self, value):
+        validate_password(value)
+        return value

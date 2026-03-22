@@ -1,0 +1,19 @@
+Welcome to A Good Fit, {{ username }}!
+
+We're thrilled to have you join us. A Good Fit is your wellness community — find workout
+buddies, discover local events, and build meaningful connections.
+
+Here's what you can do:
+
+  * Track Workouts — Log runs, rides, swims and more with live GPS tracking.
+  * Find Your Fit Squad — Discover people who share your fitness goals nearby.
+  * Join Local Events — RSVP to group workouts and community meetups.
+  * Connect & Motivate — Message your matches and grow together.
+
+Quick tip: Complete your profile and pick your interests to get the best matches right away!
+
+Open the app: https://www.lendmonade.com
+
+---
+You're receiving this because you signed up at A Good Fit (lendmonade.com).
+© {{ year }} A Good Fit. All rights reserved.

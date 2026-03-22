@@ -9,7 +9,7 @@ from .serializers import (
     UserSerializer, UserProfileSerializer, UserCreateSerializer,
     UserUpdateSerializer, PublicUserSerializer, FollowSerializer,
     OnboardingSerializer, UserInterestSerializer, UserIntentionSerializer,
-    UserPhotoSerializer, UserPromptSerializer
+    UserPhotoSerializer, UserPromptSerializer, ChangePasswordSerializer
 )
 
 User = get_user_model()
@@ -158,6 +158,30 @@ class UserViewSet(viewsets.ModelViewSet):
             'user': UserSerializer(user).data
         })
     
+    @action(detail=False, methods=['post'], url_path='change_password')
+    def change_password(self, request):
+        """Change the authenticated user's password."""
+        serializer = ChangePasswordSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user = request.user
+        if not user.check_password(serializer.validated_data['current_password']):
+            return Response(
+                {'current_password': ['Incorrect password.']},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        user.set_password(serializer.validated_data['new_password'])
+        user.save()
+
+        # Issue fresh tokens so the session stays alive after the password change
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            'message': 'Password changed successfully.',
+            'access': str(refresh.access_token),
+            'refresh': str(refresh),
+        })
+
     @action(detail=False, methods=['get'])
     def discover(self, request):
         """Discover users based on interests and location"""
