@@ -38,11 +38,15 @@ class UserViewSet(viewsets.ModelViewSet):
     def me(self, request):
         """Get or update current user profile"""
         if request.method == 'PATCH':
-            serializer = self.get_serializer(request.user, data=request.data, partial=True)
+            serializer = UserUpdateSerializer(
+                request.user, data=request.data, partial=True
+            )
             serializer.is_valid(raise_exception=True)
             serializer.save()
-            return Response(serializer.data)
-        serializer = self.get_serializer(request.user)
+            # Return the full profile after saving
+            profile = UserProfileSerializer(request.user)
+            return Response(profile.data)
+        serializer = UserProfileSerializer(request.user)
         return Response(serializer.data)
     
     @action(detail=False, methods=['post'])
