@@ -3,6 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import get_user_model
+from django.contrib.auth.tokens import default_token_generator
 from django.db.models import Q
 from .models import UserInterest, UserIntention, UserPhoto, UserPrompt, Follow, Block
 from .serializers import (
@@ -30,7 +31,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return UserSerializer
     
     def get_permissions(self):
-        if self.action in ['create', 'login', 'refresh']:
+        if self.action in ['create', 'login', 'refresh', 'forgot_password']:
             return [permissions.AllowAny()]
         return [permissions.IsAuthenticated()]
     
@@ -211,6 +212,23 @@ class UserViewSet(viewsets.ModelViewSet):
             'access': str(refresh.access_token),
             'refresh': str(refresh),
         })
+
+    @action(detail=False, methods=['post'], url_path='forgot_password',
+            permission_classes=[permissions.AllowAny])
+    def forgot_password(self, request):
+        """Send a password-reset email to the given address (if it exists)."""
+        from .emails import send_password_reset_email
+        email = request.data.get('email', '').strip().lower()
+        if not email:
+            return Response({'error': 'Email is required.'},
+                            status=status.HTTP_400_BAD_REQUEST)
+        try:
+            user = User.objects.get(email=email)
+            token = default_token_generator.make_token(user)
+            send_password_reset_email(user, token)
+        except User.DoesNotExist:
+            pass  # Don't reveal whether the email exists
+        return Response({'message': 'If that email exists, a reset link has been sent.'})
 
     @action(detail=False, methods=['get'])
     def discover(self, request):
