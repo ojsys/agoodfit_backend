@@ -2,10 +2,10 @@
 URL configuration for agoodfit_backend project.
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf import settings
-from django.conf.urls.static import static
 from django.views.generic import TemplateView
+from django.views.static import serve
 
 urlpatterns = [
     path('', TemplateView.as_view(template_name='landing.html'), name='landing'),
@@ -20,6 +20,8 @@ urlpatterns = [
     path('api/feed/', include('feed.urls')),
 ]
 
-# Media files — served by Django in both dev and production
-# (WhiteNoise only handles static/, not media/)
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# Media files — always served by Django (static() only works with DEBUG=True,
+# so we use the serve view directly to cover production as well).
+urlpatterns += [
+    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+]
