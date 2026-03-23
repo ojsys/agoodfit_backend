@@ -1,8 +1,9 @@
 from rest_framework import viewsets, status, permissions
 from rest_framework.decorators import action
+from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from django.db.models import Q
-from .models import Post, PostLike, PostComment
+from .models import Post, PostLike, PostComment, CommentLike
 from .serializers import PostSerializer, PostCreateSerializer, PostCommentSerializer
 from users.models import Follow
 
@@ -12,7 +13,7 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
 
     def get_queryset(self):
-        # like/comments/retrieve need access to any post, not just own posts
+        # like / comments / retrieve need access to any post
         if self.action in ['like', 'comments', 'retrieve']:
             return Post.objects.all().select_related('author')
         return Post.objects.filter(author=self.request.user).select_related('author')
@@ -40,14 +41,18 @@ class PostViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get'])
     def feed(self, request):
-        """Posts from people the user follows, plus their own, newest first."""
+        """Posts from people the user follows plus their own, newest first."""
         following_ids = Follow.objects.filter(
             follower=request.user
         ).values_list('following_id', flat=True)
 
-        queryset = Post.objects.filter(
-            Q(author__in=following_ids) | Q(author=request.user)
-        ).select_related('author').prefetch_related('comments', 'likes').order_by('-created_at')
+        queryset = (
+            Post.objects
+            .filter(Q(author__in=following_ids) | Q(author=request.user))
+            .select_related('author')
+            .prefetch_related('comments', 'likes')
+            .order_by('-created_at')
+        )
 
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -66,18 +71,22 @@ class PostViewSet(viewsets.ModelViewSet):
             post.likes_count += 1
             post.save(update_fields=['likes_count'])
             return Response({'liked': True, 'likes_count': post.likes_count})
-        else:
-            like.delete()
-            post.likes_count = max(0, post.likes_count - 1)
-            post.save(update_fields=['likes_count'])
-            return Response({'liked': False, 'likes_count': post.likes_count})
+        like.delete()
+        post.likes_count = max(0, post.likes_count - 1)
+        post.save(update_fields=['likes_count'])
+        return Response({'liked': False, 'likes_count': post.likes_count})
 
     @action(detail=True, methods=['get', 'post'])
     def comments(self, request, pk=None):
-        """List or add comments on a post."""
+        """List top-level comments or add a new comment."""
         post = self.get_object()
         if request.method == 'GET':
-            comments = post.comments.select_related('author').all()
+            comments = (
+                post.comments
+                .filter(parent=None)
+                .select_related('author')
+                .prefetch_related('replies')
+            )
             serializer = PostCommentSerializer(comments, many=True, context={'request': request})
             return Response(serializer.data)
 
@@ -85,9 +94,7 @@ class PostViewSet(viewsets.ModelViewSet):
         if not content:
             return Response({'error': 'Comment cannot be empty.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        comment = PostComment.objects.create(
-            author=request.user, post=post, content=content
-        )
+        comment = PostComment.objects.create(author=request.user, post=post, content=content)
         post.comments_count += 1
         post.save(update_fields=['comments_count'])
         return Response(
@@ -97,17 +104,55 @@ class PostViewSet(viewsets.ModelViewSet):
 
 
 class PostCommentViewSet(viewsets.GenericViewSet):
-    """Allows deleting a comment by its own author."""
+    """Handles comment replies and comment likes."""
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = PostCommentSerializer
 
     def get_queryset(self):
-        return PostComment.objects.filter(author=self.request.user)
+        return PostComment.objects.all().select_related('author')
 
     def destroy(self, request, *args, **kwargs):
-        comment = self.get_object()
+        comment = get_object_or_404(PostComment, pk=kwargs['pk'], author=request.user)
         post = comment.post
         comment.delete()
         post.comments_count = max(0, post.comments_count - 1)
         post.save(update_fields=['comments_count'])
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=True, methods=['get', 'post'])
+    def replies(self, request, pk=None):
+        """List or create replies to a comment."""
+        comment = get_object_or_404(PostComment, pk=pk)
+        if request.method == 'GET':
+            replies = comment.replies.select_related('author').all()
+            serializer = PostCommentSerializer(replies, many=True, context={'request': request})
+            return Response(serializer.data)
+
+        content = request.data.get('content', '').strip()
+        if not content:
+            return Response({'error': 'Reply cannot be empty.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        reply = PostComment.objects.create(
+            author=request.user,
+            post=comment.post,
+            content=content,
+            parent=comment,
+        )
+        return Response(
+            PostCommentSerializer(reply, context={'request': request}).data,
+            status=status.HTTP_201_CREATED,
+        )
+
+    @action(detail=True, methods=['post'])
+    def like(self, request, pk=None):
+        """Toggle like on a comment."""
+        comment = get_object_or_404(PostComment, pk=pk)
+        like, created = CommentLike.objects.get_or_create(user=request.user, comment=comment)
+        if created:
+            comment.likes_count += 1
+            comment.save(update_fields=['likes_count'])
+            return Response({'liked': True, 'likes_count': comment.likes_count})
+        like.delete()
+        comment.likes_count = max(0, comment.likes_count - 1)
+        comment.save(update_fields=['likes_count'])
+        return Response({'liked': False, 'likes_count': comment.likes_count})

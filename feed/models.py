@@ -56,7 +56,16 @@ class PostComment(models.Model):
         'users.User', on_delete=models.CASCADE, related_name='post_comments'
     )
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    # Null parent = top-level comment; non-null = reply to another comment
+    parent = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name='replies',
+    )
     content = models.TextField()
+    likes_count = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -64,3 +73,20 @@ class PostComment(models.Model):
 
     def __str__(self):
         return f'{self.author.username}: {self.content[:60]}'
+
+
+class CommentLike(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(
+        'users.User', on_delete=models.CASCADE, related_name='comment_likes'
+    )
+    comment = models.ForeignKey(
+        PostComment, on_delete=models.CASCADE, related_name='likes'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ['user', 'comment']
+
+    def __str__(self):
+        return f'{self.user.username} liked comment {self.comment_id}'
