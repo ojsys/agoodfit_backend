@@ -12,6 +12,9 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
 
     def get_queryset(self):
+        # like/comments/retrieve need access to any post, not just own posts
+        if self.action in ['like', 'comments', 'retrieve']:
+            return Post.objects.all().select_related('author')
         return Post.objects.filter(author=self.request.user).select_related('author')
 
     def get_serializer_class(self):

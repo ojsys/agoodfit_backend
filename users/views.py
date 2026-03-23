@@ -44,10 +44,9 @@ class UserViewSet(viewsets.ModelViewSet):
             )
             serializer.is_valid(raise_exception=True)
             serializer.save()
-            # Return the full profile after saving
-            profile = UserProfileSerializer(request.user)
+            profile = UserProfileSerializer(request.user, context={'request': request})
             return Response(profile.data)
-        serializer = UserProfileSerializer(request.user)
+        serializer = UserProfileSerializer(request.user, context={'request': request})
         return Response(serializer.data)
     
     @action(detail=False, methods=['post'])
@@ -87,9 +86,9 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response({
             'refresh': str(refresh),
             'access': str(refresh.access_token),
-            'user': UserSerializer(user).data
+            'user': UserSerializer(user, context={'request': request}).data
         })
-    
+
     @action(detail=False, methods=['post'])
     def refresh(self, request):
         """Refresh access token"""
@@ -160,9 +159,9 @@ class UserViewSet(viewsets.ModelViewSet):
         
         return Response({
             'message': 'Onboarding completed successfully',
-            'user': UserSerializer(user).data
+            'user': UserSerializer(user, context={'request': request}).data
         })
-    
+
     @action(detail=False, methods=['post'], url_path='upload_avatar')
     def upload_avatar(self, request):
         """Upload or replace the authenticated user's profile photo."""
@@ -260,10 +259,10 @@ class UserViewSet(viewsets.ModelViewSet):
         # Paginate results
         page = self.paginate_queryset(similar_users)
         if page is not None:
-            serializer = PublicUserSerializer(page, many=True)
+            serializer = PublicUserSerializer(page, many=True, context={'request': request})
             return self.get_paginated_response(serializer.data)
-        
-        serializer = PublicUserSerializer(similar_users, many=True)
+
+        serializer = PublicUserSerializer(similar_users, many=True, context={'request': request})
         return Response(serializer.data)
 
 
