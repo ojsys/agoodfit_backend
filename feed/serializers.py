@@ -16,7 +16,7 @@ class PostCommentSerializer(serializers.ModelSerializer):
             'content', 'parent', 'likes_count', 'is_liked', 'replies_count',
             'created_at',
         ]
-        read_only_fields = ['id', 'likes_count', 'created_at']
+        read_only_fields = ['id', 'parent', 'likes_count', 'created_at']
 
     def get_author_display_name(self, obj):
         fn = (obj.author.first_name or '').strip()

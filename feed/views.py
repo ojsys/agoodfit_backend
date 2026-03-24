@@ -2,7 +2,7 @@ from rest_framework import viewsets, status, permissions
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
-from django.db.models import Q
+from django.db.models import Q, F
 from .models import Post, PostLike, PostComment, CommentLike
 from .serializers import PostSerializer, PostCreateSerializer, PostCommentSerializer
 from users.models import Follow
@@ -68,12 +68,12 @@ class PostViewSet(viewsets.ModelViewSet):
         post = self.get_object()
         like, created = PostLike.objects.get_or_create(user=request.user, post=post)
         if created:
-            post.likes_count += 1
-            post.save(update_fields=['likes_count'])
+            Post.objects.filter(pk=post.pk).update(likes_count=F('likes_count') + 1)
+            post.refresh_from_db(fields=['likes_count'])
             return Response({'liked': True, 'likes_count': post.likes_count})
         like.delete()
-        post.likes_count = max(0, post.likes_count - 1)
-        post.save(update_fields=['likes_count'])
+        Post.objects.filter(pk=post.pk).update(likes_count=F('likes_count') - 1)
+        post.refresh_from_db(fields=['likes_count'])
         return Response({'liked': False, 'likes_count': post.likes_count})
 
     @action(detail=True, methods=['get', 'post'])
@@ -95,8 +95,7 @@ class PostViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Comment cannot be empty.'}, status=status.HTTP_400_BAD_REQUEST)
 
         comment = PostComment.objects.create(author=request.user, post=post, content=content)
-        post.comments_count += 1
-        post.save(update_fields=['comments_count'])
+        Post.objects.filter(pk=post.pk).update(comments_count=F('comments_count') + 1)
         return Response(
             PostCommentSerializer(comment, context={'request': request}).data,
             status=status.HTTP_201_CREATED,
@@ -113,10 +112,9 @@ class PostCommentViewSet(viewsets.GenericViewSet):
 
     def destroy(self, request, *args, **kwargs):
         comment = get_object_or_404(PostComment, pk=kwargs['pk'], author=request.user)
-        post = comment.post
+        post_id = comment.post_id
         comment.delete()
-        post.comments_count = max(0, post.comments_count - 1)
-        post.save(update_fields=['comments_count'])
+        Post.objects.filter(pk=post_id).update(comments_count=F('comments_count') - 1)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=True, methods=['get', 'post'])
@@ -138,6 +136,7 @@ class PostCommentViewSet(viewsets.GenericViewSet):
             content=content,
             parent=comment,
         )
+        Post.objects.filter(pk=comment.post_id).update(comments_count=F('comments_count') + 1)
         return Response(
             PostCommentSerializer(reply, context={'request': request}).data,
             status=status.HTTP_201_CREATED,
@@ -149,10 +148,10 @@ class PostCommentViewSet(viewsets.GenericViewSet):
         comment = get_object_or_404(PostComment, pk=pk)
         like, created = CommentLike.objects.get_or_create(user=request.user, comment=comment)
         if created:
-            comment.likes_count += 1
-            comment.save(update_fields=['likes_count'])
+            PostComment.objects.filter(pk=comment.pk).update(likes_count=F('likes_count') + 1)
+            comment.refresh_from_db(fields=['likes_count'])
             return Response({'liked': True, 'likes_count': comment.likes_count})
         like.delete()
-        comment.likes_count = max(0, comment.likes_count - 1)
-        comment.save(update_fields=['likes_count'])
+        PostComment.objects.filter(pk=comment.pk).update(likes_count=F('likes_count') - 1)
+        comment.refresh_from_db(fields=['likes_count'])
         return Response({'liked': False, 'likes_count': comment.likes_count})
