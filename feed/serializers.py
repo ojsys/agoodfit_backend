@@ -32,11 +32,17 @@ class PostCommentSerializer(serializers.ModelSerializer):
     def get_is_liked(self, obj):
         request = self.context.get('request')
         if request and request.user.is_authenticated:
-            return CommentLike.objects.filter(user=request.user, comment=obj).exists()
+            try:
+                return CommentLike.objects.filter(user=request.user, comment=obj).exists()
+            except Exception:
+                return False
         return False
 
     def get_replies_count(self, obj):
-        return obj.replies.count()
+        try:
+            return obj.replies.count()
+        except Exception:
+            return 0
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -77,13 +83,18 @@ class PostSerializer(serializers.ModelSerializer):
     def get_is_liked(self, obj):
         request = self.context.get('request')
         if request and request.user.is_authenticated:
-            return PostLike.objects.filter(user=request.user, post=obj).exists()
+            try:
+                return PostLike.objects.filter(user=request.user, post=obj).exists()
+            except Exception:
+                return False
         return False
 
     def get_recent_comments(self, obj):
-        # Only top-level comments for post preview
-        comments = obj.comments.filter(parent=None).order_by('created_at')[:2]
-        return PostCommentSerializer(comments, many=True, context=self.context).data
+        try:
+            comments = obj.comments.filter(parent=None).order_by('created_at')[:2]
+            return PostCommentSerializer(comments, many=True, context=self.context).data
+        except Exception:
+            return []
 
 
 class PostCreateSerializer(serializers.ModelSerializer):
